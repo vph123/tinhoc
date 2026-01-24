@@ -70,19 +70,8 @@
                 <div class="block_3">
                     <h3>Liên hệ</h3>
                     <p>
-                        Mọi chi tiết xin liên hệ trường THPT Rạch Kiến<br/>
-                        ĐC: ấp Đồng ky, xã Rạch Kiến, An Phú - An Giang.
+                        Trường THPT Rạch Kiến
                     </p>
-                </div>
-
-                <div class="block_3">
-                    <h3>Bản quyền</h3>
-                    <p>
-                        Bản quyền thuộc về trường THPT Rạch Kiến<br/>
-                        Huyện An Phú - tỉnh An Giang.
-                    </p>
-                </div>
-
                 <div class="block_3">
                     <h3>Liên kết</h3>
                     <p>
