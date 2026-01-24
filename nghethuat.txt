@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Nghệ thuật</title>
+        <link href="style.css" rel="stylesheet" type="text/css">
+    </head>
+
+    <body>
+        <div class="banner">
+            <h2>CLB ngoại khóa trường THPT Rạch Kiến</h2>
+        </div>
+
+        <div class="slogan">
+            <div class="row">
+                <div class="block_3">
+                    <h3>Năng động</h3>
+                    <p class="text-content">Hoạt động năng nổ và hiệu quả</p>
+                </div>
+
+                <div class="block_3">
+                    <h3>Đam mê</h3>
+                    <p class="text-content">Cháy hết mình trong các cuộc chơi</p>
+                </div>
+
+                <div class="block_3">
+                    <h3>Tỏa sáng</h3>
+                    <p class="text-content">Giành những giải thưởng cao nhất</p>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h2>Câu lạc bộ nghệ thuật trường THPT Rạch Kiến</h2>
+            <ul style="list-style-type: circle; font-size: 16pt; line-height: 130%;">
+                <a href="#"><li>Mĩ thuật</li></a>
+                <a href="#"><li>Nhiếp ảnh</li></a>
+                <a href="#"><li>Âm nhạc</li></a>
+                <a href="#"><li>Khiêu vũ</li></a>
+            </ul>
+
+            <h2>Nghệ sĩ về Lào Cai</h2>
+            <p>
+                Tại buổi gặp gỡ báo chí chiều tối 11-10 ở Hà Nội, nhạc sĩ Hồ Hoài Anh
+                cho biết ngay những ngày đầu tiên khi truyền thông đưa tin về tình trạng
+                mưa lũ, sạt lở ở Lào Cai, anh cùng nhạc sĩ Phạm Việt Tuân, một người con
+                của Lào Cai, đã về với người dân Lào Cai.
+            </p>
+
+            <img src="nghethuat.jpg" alt="Hoạt động của các CLB thể thao">
+
+            <p>
+                Kết quả là đêm nhạc Hồi sinh sẽ mang hơn 20 nghệ sĩ tên tuổi từ ba miền
+                đến hát để cổ vũ sự hồi sinh trên mảnh đất này.
+            </p>
+
+            <iframe
+                width="560"
+                height="315"
+                src="quoc_ca.mp4"
+                title="Quốc ca"
+                autoplay>
+            </iframe>
+        </div>
+
+        <div class="footer">
+            <div class="row">
+                <div class="block_3">
+                    <h3>Liên hệ</h3>
+                    <p>
+                        Mọi chi tiết xin liên hệ trường THPT Rạch Kiến<br/>
+                        ĐC: ấp Đồng ky, xã Rạch Kiến, An Phú - An Giang.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
