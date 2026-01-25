@@ -1,4 +1,4 @@
-background: url("Nhập ảnh tại đây") no-repeat center center;
+background: url("banner.png") no-repeat center center;
 background-size: cover;
 width: 100%;
 padding-top: 12rem;
