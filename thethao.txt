@@ -45,7 +45,7 @@
                 U23 Việt Nam giành chiến thắng kịch tính trước U23 Hàn Quốc trong trận đấu giàu cảm xúc
 Đêm qua, U23 Việt Nam đã có cuộc đối đầu đầy căng thẳng và hấp dẫn với U23 Hàn Quốc trong khuôn khổ trận tranh hạng ba giải U23 châu Á. Trước đối thủ được đánh giá cao hơn về thể hình, thể lực cũng như kinh nghiệm thi đấu, các học trò của ban huấn luyện U23 Việt Nam vẫn nhập cuộc với tinh thần tự tin, quyết tâm cao độ và lối chơi kỷ luật.
             </p>
-            <image="thethao2.png"
+            <image="thethao2.png" width="100%" beight="400px">
             <p>Ngay từ những phút đầu, U23 Việt Nam chủ động chơi chắc chắn bên phần sân nhà, tổ chức phòng ngự chặt chẽ và chờ đợi cơ hội phản công. Chiến thuật này đã phát huy hiệu quả khi đội bóng áo đỏ có bàn thắng mở tỷ số, tạo nên sự phấn khích lớn cho người hâm mộ. Tuy nhiên, U23 Hàn Quốc nhanh chóng cho thấy bản lĩnh của một nền bóng đá hàng đầu châu lục khi liên tục gia tăng sức ép và có bàn gỡ hòa sau đó.
             </p>
             <p>Trong suốt thời gian còn lại của trận đấu, hai đội thi đấu ăn miếng trả miếng, tạo ra nhiều pha bóng nguy hiểm. Dù bị đối phương dẫn trước, U23 Việt Nam vẫn không hề nao núng, kiên trì tổ chức tấn công và tìm được bàn gỡ, đưa trận đấu về thế cân bằng 2–2 sau 90 phút thi đấu chính thức. Hai hiệp phụ diễn ra với tốc độ cao nhưng không có thêm bàn thắng nào được ghi.
