@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <title>Nghệ thuật</title>
-        <link href="style.css" rel="stylesheet" type="text/css">
+        <link href="styles.css" rel="stylesheet" type="text/css">
     </head>
 
     <body>
@@ -39,28 +39,24 @@
                 <a href="#"><li>Khiêu vũ</li></a>
             </ul>
 
-            <h2>Nghệ sĩ về Lào Cai</h2>
-            <p>
-                Tại buổi gặp gỡ báo chí chiều tối 11-10 ở Hà Nội, nhạc sĩ Hồ Hoài Anh
-                cho biết ngay những ngày đầu tiên khi truyền thông đưa tin về tình trạng
-                mưa lũ, sạt lở ở Lào Cai, anh cùng nhạc sĩ Phạm Việt Tuân, một người con
-                của Lào Cai, đã về với người dân Lào Cai.
+            <p>Cuộc thi “Thanh lịch Sắc màu Rạch Kiến” vừa diễn ra đã để lại nhiều ấn tượng sâu sắc trong lòng giáo viên và học sinh toàn trường. Đây là sân chơi ý nghĩa nhằm tôn vinh vẻ đẹp toàn diện của học sinh THPT Rạch Kiến, không chỉ ở hình thức bên ngoài mà còn ở tri thức, kỹ năng và phong thái ứng xử. Cuộc thi thu hút sự tham gia nhiệt tình của nhiều thí sinh đến từ các lớp, mang đến bầu không khí sôi nổi, trẻ trung và giàu cảm xúc.
             </p>
-
-            <img src="nghethuat.jpg" alt="Hoạt động của các CLB thể thao">
-
+            <image src="nghethuat2.png" width="100%" height="400px">
             <p>
-                Kết quả là đêm nhạc Hồi sinh sẽ mang hơn 20 nghệ sĩ tên tuổi từ ba miền
-                đến hát để cổ vũ sự hồi sinh trên mảnh đất này.
+                Trải qua các phần thi như trình diễn trang phục, ứng xử và thể hiện tài năng, các thí sinh đã cho thấy sự tự tin, bản lĩnh cùng nét duyên dáng riêng. Ban giám khảo làm việc công tâm, đánh giá dựa trên nhiều tiêu chí, đảm bảo lựa chọn được những gương mặt tiêu biểu nhất. Không khí cổ vũ nhiệt tình từ khán giả góp phần tạo nên thành công chung cho chương trình.
             </p>
-
-            <iframe
-                width="560"
-                height="315"
-                src="quoc_ca.mp4"
-                title="Quốc ca"
-                autoplay>
-            </iframe>
+            <p>
+                “Thanh lịch-Sắc màu Rạch Kiến” không chỉ là cuộc thi tôn vinh cái đẹp mà còn là dịp để học sinh rèn luyện kỹ năng giao tiếp, thể hiện cá tính tích cực và lan tỏa hình ảnh học sinh Rạch Kiến năng động, văn minh, giàu bản sắc trong môi trường học đường hiện đại.
+            </p>
+            <iframe    src="https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/share/v/17S1UdvszP/"
+    width="100%"
+    height="400"
+    style="border:none;overflow:hidden"
+    scrolling="no"
+    frameborder="0"
+    allowfullscreen="true"
+    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
+</iframe>
         </div>
 
         <div class="footer">
@@ -68,8 +64,17 @@
                 <div class="block_3">
                     <h3>Liên hệ</h3>
                     <p>
-                        Mọi chi tiết xin liên hệ trường THPT Rạch Kiến<br/>
-                        ĐC: ấp Đồng ky, xã Rạch Kiến, An Phú - An Giang.
+                        THPT Rạch Kiến
+                    </p>
+                </div>    
+                <div class="block_3">
+                    <h3>Bản Quyền</h3>    
+                </div>
+                <div class="block_3">
+                    <h3>Liên kết</h3>
+                    <p>
+                        <a href="index.html">Trang chủ</a><br/>
+                        <a href="nghethuat.html">Trang Nghệ thuật</a>
                     </p>
                 </div>
             </div>
