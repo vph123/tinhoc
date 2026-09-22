@@ -3,274 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ứng Dụng Trắc Nghiệm Tiếng Anh Tự Động</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Ôn Tập Trắc Nghiệm Tiếng Anh</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 30px auto; padding: 20px; line-height: 1.6; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; }
+        input, button { width: 100%; padding: 10px; box-sizing: border-box; font-size: 16px; }
+        button { background-color: #007bff; color: white; border: none; cursor: pointer; border-radius: 4px; }
+        button:disabled { background-color: #cccccc; }
+        .question-card { background: #f9f9f9; border: 1px solid #ddd; padding: 15px; margin-top: 15px; border-radius: 5px; }
+        .option { margin: 5px 0; }
+        #loading { display: none; color: #666; font-style: italic; }
+    </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen pb-12 font-sans">
+<body>
 
-    <!-- Header Section -->
-    <header class="bg-indigo-600 text-white py-6 shadow-md mb-8">
-        <div class="max-w-4xl mx-auto px-4 flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl font-bold flex items-center gap-2">
-                    <i class="fa-solid fa-graduation-cap"></i> Auto English Quiz
-                </h1>
-                <p class="text-indigo-200 text-sm mt-1">Tự tạo đề thi trắc nghiệm & học từ vựng thông minh qua Gemini AI</p>
-            </div>
-            
-            <!-- Fixed Vocab Button (Visible after quiz submission) -->
-            <button id="vocabFloatBtn" onclick="openVocabModal()" class="hidden bg-amber-500 hover:bg-amber-600 text-white font-semibold px-4 py-2 rounded-lg shadow-lg transition flex items-center gap-2">
-                📚 Lưu Trữ Từ Vựng <span id="vocabBadge" class="bg-amber-700 text-white text-xs px-2 py-0.5 rounded-full">0</span>
-            </button>
-        </div>
-    </header>
-
-    <div class="max-w-4xl mx-auto px-4">
-
-        <!-- Upload File Section -->
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-8">
-            <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-file-arrow-up text-indigo-600"></i> Tải Bài Tập (PDF hoặc TXT)
-            </h2>
-            <form id="uploadForm" class="flex flex-col sm:flex-row gap-4 items-center">
-                <input type="file" id="fileInput" accept=".pdf,.txt" class="block w-full text-sm text-slate-500
-                  file:mr-4 file:py-2.5 file:px-4
-                  file:rounded-lg file:border-0
-                  file:text-sm file:font-semibold
-                  file:bg-indigo-50 file:text-indigo-700
-                  hover:file:bg-indigo-100 cursor-pointer border rounded-lg border-slate-200 p-1" required />
-                <button type="submit" id="submitBtn" class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2.5 rounded-lg transition flex items-center justify-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i> Tạo Bài Thi
-                </button>
-            </form>
-            <div id="loading" class="hidden mt-4 text-center text-indigo-600 font-medium animate-pulse flex items-center justify-center gap-2">
-                <i class="fa-solid fa-circle-notch fa-spin"></i> Đang đọc tài liệu và khởi tạo câu hỏi với Gemini AI...
-            </div>
-        </div>
-
-        <!-- Quiz Container -->
-        <div id="quizContainer" class="space-y-6 hidden">
-            <div id="quizList" class="space-y-6"></div>
-
-            <!-- Submit Button & Score -->
-            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
-                <div id="scoreDisplay" class="text-xl font-bold text-slate-700"></div>
-                <button id="submitQuizBtn" onclick="submitQuiz()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3 rounded-lg shadow transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-check-double"></i> NỘP ĐÁP ÁN & TÍNH ĐIỂM
-                </button>
-            </div>
-        </div>
-
+    <h2>Tạo Bài Thi Trắc Nghiệm Tiếng Anh</h2>
+    
+    <div class="form-group">
+        <label for="topic">Chủ đề:</label>
+        <input type="text" id="topic" placeholder="Ví dụ: Present Simple, Vocabulary Unit 1..." value="Present Simple">
     </div>
 
-    <!-- Vocabulary Modal -->
-    <div id="vocabModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden">
-            <div class="p-6 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
-                <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-                    📚 Danh Sách Từ Vựng Trích Xuất
-                </h3>
-                <button onclick="closeVocabModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold p-1">&times;</button>
-            </div>
-            
-            <div class="p-6 overflow-y-auto flex-1 space-y-4">
-                <p class="text-sm text-slate-600">Chọn các từ vựng bạn muốn Gemini phân tích chuyên sâu và xuất ra file Word (.docx):</p>
-                <div id="vocabCheckboxList" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
-            </div>
-
-            <div class="p-6 bg-slate-50 border-t border-slate-200 flex justify-end gap-3">
-                <button onclick="closeVocabModal()" class="px-4 py-2 border rounded-lg text-slate-600 hover:bg-slate-100 font-medium">Hủy</button>
-                <button onclick="exportVocabDocx()" id="exportDocxBtn" class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold flex items-center gap-2 shadow">
-                    <i class="fa-solid fa-file-word"></i> Xuất File Word (.docx)
-                </button>
-            </div>
-        </div>
+    <div class="form-group">
+        <label for="numQuestions">Số lượng câu hỏi:</label>
+        <input type="number" id="numQuestions" value="5" min="1" max="10">
     </div>
 
-    <script>
-        let currentQuiz = [];
-        let extractedWords = new Set();
+    <button id="btnGenerate" onclick="generateQuiz()">Tạo Bài Thi</button>
+    
+    <p id="loading">Đang kết nối Gemini AI để tạo câu hỏi, vui lòng đợi giây lát...</p>
+    <div id="quizContainer"></div>
 
-        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const fileInput = document.getElementById('fileInput');
-            if (!fileInput.files[0]) return;
-
-            const formData = new FormData();
-            formData.append('file', fileInput.files[0]);
-
-            document.getElementById('loading').classList.remove('hidden');
-            document.getElementById('quizContainer').classList.add('hidden');
-            document.getElementById('submitBtn').disabled = true;
-
-            try {
-                const res = await fetch('/api/generate-quiz', {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await res.json();
-
-                if (!res.ok || data.error) {
-                    alert('Lỗi: ' + (data.error || 'Khởi tạo bài thi thất bại'));
-                    return;
-                }
-
-                currentQuiz = data.quiz;
-                renderQuiz(data.quiz);
-                extractVocabulary(data.quiz);
-                
-                document.getElementById('quizContainer').classList.remove('hidden');
-                document.getElementById('scoreDisplay').innerText = '';
-            } catch (err) {
-                alert('Có lỗi xảy ra: ' + err.message);
-            } finally {
-                document.getElementById('loading').classList.add('hidden');
-                document.getElementById('submitBtn').disabled = false;
-            }
-        });
-
-        function renderQuiz(quiz) {
-            const list = document.getElementById('quizList');
-            list.innerHTML = '';
-
-            quiz.forEach((q, idx) => {
-                const card = document.createElement('div');
-                card.className = "bg-white p-6 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md";
-                card.id = `q-card-${idx}`;
-
-                let optionsHtml = '';
-                for (const [key, val] of Object.entries(q.options)) {
-                    optionsHtml += `
-                        <label class="flex items-center gap-3 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer transition option-label-${idx}">
-                            <input type="radio" name="question_${idx}" value="${key}" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
-                            <span class="font-medium text-slate-700">${key}.</span>
-                            <span class="text-slate-800">${val}</span>
-                        </label>
-                    `;
-                }
-
-                card.innerHTML = `
-                    <div class="font-semibold text-lg text-slate-800 mb-3 flex gap-2">
-                        <span class="text-indigo-600 font-bold">Câu ${q.id || (idx + 1)}:</span>
-                        <span>${q.question}</span>
-                    </div>
-                    <div class="space-y-2">
-                        ${optionsHtml}
-                    </div>
-                    <div id="explanation-${idx}" class="hidden mt-4 p-4 rounded-lg text-sm"></div>
-                `;
-                list.appendChild(card);
-            });
-        }
-
-        function submitQuiz() {
-            let score = 0;
-            currentQuiz.forEach((q, idx) => {
-                const selected = document.querySelector(`input[name="question_${idx}"]:checked`);
-                const card = document.getElementById(`q-card-${idx}`);
-                const expDiv = document.getElementById(`explanation-${idx}`);
-
-                expDiv.classList.remove('hidden');
-
-                if (selected && selected.value === q.answer) {
-                    score++;
-                    card.classList.add('border-emerald-500', 'bg-emerald-50/20');
-                    expDiv.className = "mt-4 p-4 rounded-lg text-sm bg-emerald-100 text-emerald-900 border border-emerald-300";
-                    expDiv.innerHTML = `<strong><i class="fa-solid fa-circle-check"></i> Đúng!</strong> ${q.explanation}`;
-                } else {
-                    card.classList.add('border-rose-500', 'bg-rose-50/20');
-                    expDiv.className = "mt-4 p-4 rounded-lg text-sm bg-rose-100 text-rose-900 border border-rose-300";
-                    expDiv.innerHTML = `<strong><i class="fa-solid fa-circle-xmark"></i> Sai! (Đáp án đúng: ${q.answer})</strong><br/>${q.explanation}`;
-                }
-            });
-
-            document.getElementById('scoreDisplay').innerHTML = `Kết quả: <span class="text-indigo-600">${score}/${currentQuiz.length}</span> câu đúng`;
-            
-            // Show Float Vocab Button
-            document.getElementById('vocabFloatBtn').classList.remove('hidden');
-        }
-
-        function extractVocabulary(quiz) {
-            extractedWords.clear();
-            quiz.forEach(q => {
-                const text = `${q.question} ${Object.values(q.options).join(' ')}`;
-                const words = text.match(/[a-zA-Z]{4,}/g) || [];
-                words.forEach(w => extractedWords.add(w.toLowerCase()));
-            });
-
-            document.getElementById('vocabBadge').innerText = extractedWords.size;
-            renderVocabCheckboxes();
-        }
-
-        function renderVocabCheckboxes() {
-            const container = document.getElementById('vocabCheckboxList');
-            container.innerHTML = '';
-
-            Array.from(extractedWords).sort().forEach(word => {
-                const item = document.createElement('label');
-                item.className = "flex items-center gap-2 p-2 rounded border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm font-medium";
-                item.innerHTML = `
-                    <input type="checkbox" value="${word}" checked class="vocab-checkbox rounded text-amber-600 focus:ring-amber-500">
-                    <span>${word}</span>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function openVocabModal() {
-            document.getElementById('vocabModal').classList.remove('hidden');
-            document.getElementById('vocabModal').classList.add('flex');
-        }
-
-        function closeVocabModal() {
-            document.getElementById('vocabModal').classList.add('hidden');
-            document.getElementById('vocabModal').classList.remove('flex');
-        }
-
-        async function exportVocabDocx() {
-            const selectedCheckboxes = document.querySelectorAll('.vocab-checkbox:checked');
-            const selectedWords = Array.from(selectedCheckboxes).map(cb => cb.value);
-
-            if (selectedWords.length === 0) {
-                alert('Vui lòng chọn ít nhất 1 từ vựng để xuất!');
-                return;
-            }
-
-            const btn = document.getElementById('exportDocxBtn');
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Đang tạo file Word...`;
-
-            try {
-                const res = await fetch('/api/export-vocab', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ words: selectedWords })
-                });
-
-                if (!res.ok) {
-                    const errData = await res.json();
-                    throw new Error(errData.error || 'Lỗi khi tạo file Word');
-                }
-
-                const blob = await res.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'Danh_Sach_Tu_Vung.docx';
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-
-                closeVocabModal();
-            } catch (err) {
-                alert('Lỗi: ' + err.message);
-            } flex
-            finally {
-                btn.disabled = false;
-                btn.innerHTML = `<i class="fa-solid fa-file-word"></i> Xuất File Word (.docx)`;
-            }
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
