@@ -1,18 +1,26 @@
 async function generateQuiz() {
     const topic = document.getElementById('topic').value.trim();
+    const fileInput = document.getElementById('fileInput');
     const numQuestions = document.getElementById('numQuestions').value;
     const btn = document.getElementById('btnGenerate');
     const loading = document.getElementById('loading');
     const container = document.getElementById('quizContainer');
 
-    if (!topic) {
-        alert("Vui lòng nhập chủ đề!");
-        return;
-    }
-
     btn.disabled = true;
     loading.style.display = 'block';
     container.innerHTML = '';
+
+    let contentToSend = topic;
+
+    // Nếu người dùng chọn file TXT, đọc nội dung file
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        try {
+            contentToSend = await file.text();
+        } catch (e) {
+            console.log("Không thể đọc file text trực tiếp:", e);
+        }
+    }
 
     try {
         const response = await fetch('/api/generate-quiz', {
@@ -20,7 +28,10 @@ async function generateQuiz() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ topic, numQuestions: parseInt(numQuestions) })
+            body: JSON.stringify({ 
+                topic: contentToSend || 'General English', 
+                numQuestions: parseInt(numQuestions) 
+            })
         });
 
         const result = await response.json();
