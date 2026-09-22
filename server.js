@@ -15,14 +15,11 @@ app.post('/api/generate-quiz', async (req, res) => {
     try {
         const { topic, numQuestions } = req.body;
 
-        // Cấu hình model chuẩn
-        const model = genAI.getGenerativeModel({ 
-            model: "gemini-1.5-flash",
-            generationConfig: { responseMimeType: "application/json" }
-        });
+        // Cấu hình model gemini-3.6-flash
+        const model = genAI.getGenerativeModel({ model: "gemini-3.6-flash" });
 
         const prompt = `Tạo ${numQuestions || 5} câu hỏi trắc nghiệm tiếng Anh về chủ đề: "${topic || 'General English'}".
-Trả về dạng JSON array như sau:
+Khung trả về BẮT BUỘC là dạng mảng JSON thuần túy (không chứa markdown \`\`\`json):
 [
   {
     "question": "Nội dung câu hỏi",
@@ -33,16 +30,22 @@ Trả về dạng JSON array như sau:
 ]`;
 
         const result = await model.generateContent(prompt);
-        const responseText = result.response.text();
-        const quizData = JSON.parse(responseText);
+        let responseText = result.response.text().trim();
 
+        if (responseText.startsWith('```json')) {
+            responseText = responseText.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+        } else if (responseText.startsWith('```')) {
+            responseText = responseText.replace(/^```\s*/, '').replace(/\s*```$/, '');
+        }
+
+        const quizData = JSON.parse(responseText);
         return res.json({ success: true, data: quizData });
 
     } catch (error) {
         console.error("Lỗi server:", error);
         return res.status(500).json({ 
             success: false, 
-            error: error.message || "Lỗi không xác định từ Gemini AI" 
+            error: error.message || "Lỗi khi gọi Gemini API" 
         });
     }
 });
