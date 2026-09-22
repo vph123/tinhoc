@@ -1,39 +1,57 @@
-require('dotenv').config();
 const express = require('express');
-const multer = require('multer');
-const pdfParse = require('pdf-parse');
-const { GoogleGenAI } = require('@google/generative-ai');
-const { Document, Packer, Paragraph, TextRun, HeadingLevel, Table, TableRow, TableCell, WidthType, BorderStyle } = require('docx');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 const path = require('path');
 
 const app = express();
-const upload = multer({ storage: multer.memoryStorage() });
+const PORT = process.env.PORT || 3000;
 
+// Cấu hình Express
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Initialize Gemini Client
+// Khởi tạo Gemini API
 const apiKey = process.env.GEMINI_API_KEY;
-if (!apiKey) {
-    console.warn("WARNING: GEMINI_API_KEY is not set in environment variables!");
-}
-const ai = new GoogleGenAI({ apiKey: apiKey || 'DUMMY_KEY' });
+const genAI = new GoogleGenerativeAI(apiKey);
 
-// 1. API: Generate Quiz from uploaded PDF/TXT
-app.post('/api/generate-quiz', upload.single('file'), async (req, res) => {
+// Route xử lý tạo câu hỏi trắc nghiệm
+app.post('/api/generate-quiz', async (req, res) => {
     try {
-        if (!req.file) {
-            return res.status(400).json({ error: 'Vui lòng tải lên file PDF hoặc TXT!' });
+        const { topic, numQuestions } = req.body;
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+        const prompt = `Tạo ${numQuestions || 5} câu hỏi trắc nghiệm tiếng Anh về chủ đề: "${topic || 'General English'}".
+Khung trả về BẮT BUỘC là dạng mảng JSON thuần túy (không chứa markdown \`\`\`json):
+[
+  {
+    "question": "Nội dung câu hỏi",
+    "options": ["Đáp án A", "Đáp án B", "Đáp án C", "Đáp án D"],
+    "answer": 0,
+    "explanation": "Giải thích chi tiết bằng tiếng Việt"
+  }
+]`;
+
+        const result = await model.generateContent(prompt);
+        let responseText = result.response.text().trim();
+        
+        // Làm sạch dữ liệu JSON trả về
+        if (responseText.startsWith('```json')) {
+            responseText = responseText.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+        } else if (responseText.startsWith('```')) {
+            responseText = responseText.replace(/^```\s*/, '').replace(/\s*```$/, '');
         }
 
-        let extractedText = '';
-        const mimeType = req.file.mimetype;
-        const filename = req.file.originalname.toLowerCase();
+        const quizData = JSON.parse(responseText);
+        res.json({ success: true, data: quizData });
+    } catch (error) {
+        console.error("Lỗi khi tạo quiz:", error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
 
-        if (mimeType === 'application/pdf' || filename.endsWith('.pdf')) {
-            const pdfData = await pdfParse(req.file.buffer);
-            extractedText = pdfData.text;
-        } else {
+// Chạy server
+app.listen(PORT, () => {
+    console.log(`Server đang chạy tại port ${PORT}`);
+});
             extractedText = req.file.buffer.toString('utf-8');
         }
 
