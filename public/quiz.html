@@ -3,108 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bài Thi Trắc Nghiệm Tiếng Anh</title>
+    <title>Bài Thi Trắc Nghiệm AI</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 750px; margin: 30px auto; padding: 20px; line-height: 1.6; color: #333; background-color: #f4f6f9; }
-        .container { background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #007bff; margin-bottom: 20px; }
-        .question-card { background: #fafafa; border: 1px solid #e0e0e0; padding: 18px; margin-bottom: 20px; border-radius: 6px; }
-        .question-title { font-size: 16px; font-weight: bold; margin-bottom: 12px; }
-        .option { margin: 8px 0; display: block; cursor: pointer; padding: 8px; border-radius: 4px; transition: background 0.2s; }
-        .option:hover { background: #eef7ff; }
-        .option input { margin-right: 10px; }
-        button { display: block; width: 100%; padding: 14px; font-size: 18px; font-weight: bold; background-color: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 20px; }
-        button:hover { background-color: #218838; }
-        .result-box { display: none; background: #e9ecef; border-left: 5px solid #007bff; padding: 15px; margin-bottom: 20px; border-radius: 4px; text-align: center; font-size: 20px; font-weight: bold; }
-        .explanation { display: none; margin-top: 10px; padding: 10px; background: #fff9db; border: 1px solid #ffe066; border-radius: 4px; font-size: 14px; color: #856404; }
-        .correct-opt { background-color: #d4edda !important; font-weight: bold; color: #155724; }
-        .wrong-opt { background-color: #f8d7da !important; color: #721c24; }
+        body { font-family: Arial, sans-serif; max-width: 700px; margin: 30px auto; padding: 20px; background: #f4f6f9; }
+        .quiz-container { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .question { font-weight: bold; font-size: 18px; margin-bottom: 15px; }
+        .options { list-style: none; padding: 0; }
+        .options li { margin-bottom: 10px; }
+        .options label { display: block; padding: 10px 15px; background: #f1f3f5; border-radius: 6px; cursor: pointer; }
+        .options input { margin-right: 10px; }
+        .explanation { margin-top: 15px; padding: 10px; background: #e7f5ff; border-left: 4px solid #1c7ed6; display: none; }
+        .actions { margin-top: 20px; display: flex; justify-content: space-between; }
+        button { padding: 10px 20px; border: none; border-radius: 6px; background: #007bff; color: white; cursor: pointer; }
     </style>
 </head>
 <body>
-
-    <div class="container">
-        <h2>BÀI THI TRẮC NGHIỆM TIẾNG ANH</h2>
-        <div id="resultBox" class="result-box"></div>
-        <form id="quizForm"></form>
-        <button id="btnSubmit" onclick="submitQuiz()">Nộp Bài & Xem Điểm</button>
+    <div class="quiz-container">
+        <h2 id="quizTitle">Bài Thi Trắc Nghiệm AI</h2>
+        <div id="quizContent"></div>
+        <div class="actions">
+            <button id="backBtn" onclick="window.location.href='index.html'">Tạo Đề Khác</button>
+            <button id="submitAnswerBtn" onclick="checkAnswers()">Nộp Bài</button>
+        </div>
     </div>
 
     <script>
-        let quizData = [];
+        const rawData = localStorage.getItem('currentQuizData');
+        if (!rawData) {
+            alert('Không tìm thấy dữ liệu bài thi!');
+            window.location.href = 'index.html';
+        }
 
-        window.onload = function() {
-            // Lấy dữ liệu quiz lưu từ tab chính
-            const storedData = localStorage.getItem('currentQuizData');
-            if (!storedData) {
-                alert("Không tìm thấy dữ liệu bài thi!");
-                return;
-            }
-
-            quizData = JSON.parse(storedData);
-            renderQuiz();
-        };
+        const quizData = JSON.parse(rawData);
+        const container = document.getElementById('quizContent');
 
         function renderQuiz() {
-            const form = document.getElementById('quizForm');
-            let html = '';
+            container.innerHTML = '';
+            quizData.forEach((q, idx) => {
+                const qDiv = document.createElement('div');
+                qDiv.style.marginBottom = '25px';
+                
+                let optionsHtml = q.options.map((opt, i) => `
+                    <li>
+                        <label>
+                            <input type="radio" name="q_${idx}" value="${i}">
+                            ${String.fromCharCode(65 + i)}. ${opt}
+                        </label>
+                    </li>
+                `).join('');
 
-            quizData.forEach((q, index) => {
-                html += `
-                    <div class="question-card" id="card-${index}">
-                        <div class="question-title">Câu ${index + 1}: ${q.question}</div>
-                        ${q.options.map((opt, i) => `
-                            <label class="option" id="opt-label-${index}-${i}">
-                                <input type="radio" name="q${index}" value="${i}">
-                                ${String.fromCharCode(65 + i)}.${opt}
-                            </label>
-                        `).join('')}
-                        <div class="explanation" id="exp-${index}">
-                            💡 <strong>Giải thích:</strong> ${q.explanation}
-                        </div>
+                qDiv.innerHTML = `
+                    <div class="question">Câu ${idx + 1}: ${q.question}</div>
+                    <ul class="options">${optionsHtml}</ul>
+                    <div class="explanation" id="exp_${idx}">
+                        <strong>Đáp án đúng: ${String.fromCharCode(65 + q.answer)}</strong><br>
+                        ${q.explanation}
                     </div>
                 `;
+                container.appendChild(qDiv);
             });
-
-            form.innerHTML = html;
         }
 
-        function submitQuiz() {
-            let score = 0;
-            let total = quizData.length;
-
-            quizData.forEach((q, index) => {
-                const selected = document.querySelector(`input[name="q${index}"]:checked`);
-                const expBox = document.getElementById(`exp-${index}`);
-                expBox.style.display = 'block'; // Hiển thị lời giải
-
-                // Vô hiệu hóa chọn lại
-                document.querySelectorAll(`input[name="q${index}"]`).forEach(input => input.disabled = true);
-
-                if (selected) {
-                    const userAns = parseInt(selected.value);
-                    if (userAns === q.answer) {
-                        score++;
-                        document.getElementById(`opt-label-${index}-${userAns}`).classList.add('correct-opt');
-                    } else {
-                        document.getElementById(`opt-label-${index}-${userAns}`).classList.add('wrong-opt');
-                        document.getElementById(`opt-label-${index}-${q.answer}`).classList.add('correct-opt');
-                    }
-                } else {
-                    // Nếu chưa chọn, đánh dấu đáp án đúng
-                    document.getElementById(`opt-label-${index}-${q.answer}`).classList.add('correct-opt');
-                }
+        function checkAnswers() {
+            quizData.forEach((q, idx) => {
+                const exp = document.getElementById(`exp_${idx}`);
+                if (exp) exp.style.display = 'block';
             });
-
-            // Hiển thị tổng điểm
-            const percentage = Math.round((score / total) * 100);
-            const resultBox = document.getElementById('resultBox');
-            resultBox.style.display = 'block';
-            resultBox.innerHTML = `🎯 Kết quả của bạn: ${score}/${total} câu đúng (${percentage}%)`;
-
-            document.getElementById('btnSubmit').style.display = 'none';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.getElementById('submitAnswerBtn').style.display = 'none';
         }
+
+        renderQuiz();
     </script>
 </body>
 </html>
