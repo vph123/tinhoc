@@ -3,45 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ôn Tập Trắc Nghiệm Tiếng Anh</title>
+    <title>Tạo Bài Thi Trắc Nghiệm Tiếng Anh AI</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 600px; margin: 30px auto; padding: 20px; line-height: 1.6; }
+        body { font-family: Arial, sans-serif; max-width: 650px; margin: 30px auto; padding: 20px; line-height: 1.6; color: #333; }
         .form-group { margin-bottom: 15px; }
         label { display: block; font-weight: bold; margin-bottom: 5px; }
-        input, button { width: 100%; padding: 10px; box-sizing: border-box; font-size: 16px; }
-        button { background-color: #007bff; color: white; border: none; cursor: pointer; border-radius: 4px; }
-        button:disabled { background-color: #cccccc; }
-        .question-card { background: #f9f9f9; border: 1px solid #ddd; padding: 15px; margin-top: 15px; border-radius: 5px; }
-        .option { margin: 5px 0; }
-        #loading { display: none; color: #666; font-style: italic; }
+        input[type="text"], input[type="number"], input[type="file"] { width: 100%; padding: 10px; box-sizing: border-box; font-size: 15px; border: 1px solid #ccc; border-radius: 4px; }
+        button { width: 100%; padding: 12px; font-size: 16px; font-weight: bold; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:disabled { background-color: #cccccc; cursor: not-allowed; }
         .divider { text-align: center; font-weight: bold; margin: 15px 0; color: #777; }
+        .file-info { background: #eef7ff; border: 1px solid #bce1ff; padding: 10px; border-radius: 4px; margin-top: 8px; font-size: 14px; display: none; }
+        #loading { display: none; color: #007bff; font-weight: bold; margin-top: 15px; text-align: center; }
     </style>
 </head>
 <body>
 
-    <h2>Tạo Bài Thi Trắc Nghiệm Tiếng Anh</h2>
+    <h2>Tạo Bài Thi Trắc Nghiệm AI</h2>
     
     <div class="form-group">
-        <label for="topic">Chủ đề câu hỏi:</label>
-        <input type="text" id="topic" placeholder="Nhập chủ đề (vd: Present Simple)" value="Present Simple">
+        <label for="topic">1. Nhập chủ đề:</label>
+        <input type="text" id="topic" placeholder="Ví dụ: Present Simple, Job Interview..." value="Present Simple">
     </div>
 
-    <div class="divider">Hoặc</div>
+    <div class="divider">HOẶC</div>
 
     <div class="form-group">
-        <label for="fileInput">Tải file tài liệu (.txt, .pdf, .docx):</label>
-        <input type="file" id="fileInput" accept=".txt,.pdf,.doc,.docx">
+        <label for="fileInput">2. Tải file tài liệu (.txt):</label>
+        <input type="file" id="fileInput" accept=".txt" onchange="handleFileSelect()">
+        <div id="fileInfo" class="file-info"></div>
     </div>
 
     <div class="form-group">
-        <label for="numQuestions">Số lượng câu hỏi:</label>
-        <input type="number" id="numQuestions" value="5" min="1" max="10">
+        <label for="numQuestions">3. Số lượng câu hỏi (Để trống nếu muốn AI tự đề xuất):</label>
+        <input type="number" id="numQuestions" placeholder="Tự động theo độ dài bài" min="1" max="20">
     </div>
 
-    <button id="btnGenerate" onclick="generateQuiz()">Tạo Bài Thi</button>
+    <button id="btnGenerate" onclick="generateQuiz()">Tạo Bài Thi & Mở Tab Mới</button>
     
-    <p id="loading">Đang kết nối Gemini AI để tạo câu hỏi, vui lòng đợi giây lát...</p>
-    <div id="quizContainer"></div>
+    <p id="loading">⏳ Đang phân tích nội dung & tạo bài thi, vui lòng đợi giây lát...</p>
 
     <script src="script.js"></script>
 </body>
