@@ -17,7 +17,7 @@ const genAI = new GoogleGenerativeAI(apiKey);
 app.post('/api/generate-quiz', async (req, res) => {
     try {
         const { topic, numQuestions } = req.body;
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-3.6-flash" });
 
         const prompt = `Tạo ${numQuestions || 5} câu hỏi trắc nghiệm tiếng Anh về chủ đề: "${topic || 'General English'}".
 Khung trả về BẮT BUỘC là dạng mảng JSON thuần túy (không chứa markdown \`\`\`json):
