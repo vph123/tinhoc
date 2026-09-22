@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài Thi Trắc Nghiệm Tiếng Anh</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 750px; margin: 30px auto; padding: 20px; line-height: 1.6; color: #333; background-color: #f4f6f9; }
+        .container { background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #007bff; margin-bottom: 20px; }
+        .question-card { background: #fafafa; border: 1px solid #e0e0e0; padding: 18px; margin-bottom: 20px; border-radius: 6px; }
+        .question-title { font-size: 16px; font-weight: bold; margin-bottom: 12px; }
+        .option { margin: 8px 0; display: block; cursor: pointer; padding: 8px; border-radius: 4px; transition: background 0.2s; }
+        .option:hover { background: #eef7ff; }
+        .option input { margin-right: 10px; }
+        button { display: block; width: 100%; padding: 14px; font-size: 18px; font-weight: bold; background-color: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 20px; }
+        button:hover { background-color: #218838; }
+        .result-box { display: none; background: #e9ecef; border-left: 5px solid #007bff; padding: 15px; margin-bottom: 20px; border-radius: 4px; text-align: center; font-size: 20px; font-weight: bold; }
+        .explanation { display: none; margin-top: 10px; padding: 10px; background: #fff9db; border: 1px solid #ffe066; border-radius: 4px; font-size: 14px; color: #856404; }
+        .correct-opt { background-color: #d4edda !important; font-weight: bold; color: #155724; }
+        .wrong-opt { background-color: #f8d7da !important; color: #721c24; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>BÀI THI TRẮC NGHIỆM TIẾNG ANH</h2>
+        <div id="resultBox" class="result-box"></div>
+        <form id="quizForm"></form>
+        <button id="btnSubmit" onclick="submitQuiz()">Nộp Bài & Xem Điểm</button>
+    </div>
+
+    <script>
+        let quizData = [];
+
+        window.onload = function() {
+            // Lấy dữ liệu quiz lưu từ tab chính
+            const storedData = localStorage.getItem('currentQuizData');
+            if (!storedData) {
+                alert("Không tìm thấy dữ liệu bài thi!");
+                return;
+            }
+
+            quizData = JSON.parse(storedData);
+            renderQuiz();
+        };
+
+        function renderQuiz() {
+            const form = document.getElementById('quizForm');
+            let html = '';
+
+            quizData.forEach((q, index) => {
+                html += `
+                    <div class="question-card" id="card-${index}">
+                        <div class="question-title">Câu ${index + 1}: ${q.question}</div>
+                        ${q.options.map((opt, i) => `
+                            <label class="option" id="opt-label-${index}-${i}">
+                                <input type="radio" name="q${index}" value="${i}">
+                                ${String.fromCharCode(65 + i)}.${opt}
+                            </label>
+                        `).join('')}
+                        <div class="explanation" id="exp-${index}">
+                            💡 <strong>Giải thích:</strong> ${q.explanation}
+                        </div>
+                    </div>
+                `;
+            });
+
+            form.innerHTML = html;
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            let total = quizData.length;
+
+            quizData.forEach((q, index) => {
+                const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                const expBox = document.getElementById(`exp-${index}`);
+                expBox.style.display = 'block'; // Hiển thị lời giải
+
+                // Vô hiệu hóa chọn lại
+                document.querySelectorAll(`input[name="q${index}"]`).forEach(input => input.disabled = true);
+
+                if (selected) {
+                    const userAns = parseInt(selected.value);
+                    if (userAns === q.answer) {
+                        score++;
+                        document.getElementById(`opt-label-${index}-${userAns}`).classList.add('correct-opt');
+                    } else {
+                        document.getElementById(`opt-label-${index}-${userAns}`).classList.add('wrong-opt');
+                        document.getElementById(`opt-label-${index}-${q.answer}`).classList.add('correct-opt');
+                    }
+                } else {
+                    // Nếu chưa chọn, đánh dấu đáp án đúng
+                    document.getElementById(`opt-label-${index}-${q.answer}`).classList.add('correct-opt');
+                }
+            });
+
+            // Hiển thị tổng điểm
+            const percentage = Math.round((score / total) * 100);
+            const resultBox = document.getElementById('resultBox');
+            resultBox.style.display = 'block';
+            resultBox.innerHTML = `🎯 Kết quả của bạn: ${score}/${total} câu đúng (${percentage}%)`;
+
+            document.getElementById('btnSubmit').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
