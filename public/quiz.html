@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Làm Bài Thi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #faf6ec;
+    --paper-line: #d8cfba;
+    --ink: #202b33;
+    --ink-soft: #5b6772;
+    --red-pen: #b23a2e;
+    --gold: #b8901f;
+    --green: #3f7d4f;
+    --correct-bg: #d4edda;
+    --correct-border: #8fbf9c;
+    --wrong-bg: #f8d7da;
+    --wrong-border: #d99aa0;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--paper);
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    display: flex;
+    justify-content: center;
+    padding: 48px 20px 100px;
+  }
+
+  .sheet { width: 100%; max-width: 720px; }
+
+  .letterhead {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .letterhead h1 {
+    font-family: 'Lora', serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    margin: 0;
+  }
+
+  .letterhead .topic-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    max-width: 260px;
+    text-align: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  #empty-state {
+    background: #fffdf8;
+    border: 1px solid var(--paper-line);
+    border-radius: 4px;
+    padding: 40px 30px;
+    text-align: center;
+    font-family: 'Lora', serif;
+    color: var(--ink-soft);
+  }
+
+  .question-card {
+    background: #fffdf8;
+    border: 1px solid var(--paper-line);
+    border-radius: 4px;
+    padding: 24px 26px;
+    margin-bottom: 18px;
+    position: relative;
+  }
+
+  .q-number {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .q-text {
+    font-family: 'Lora', serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 4px;
+    border: 1.5px solid transparent;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: background 0.12s ease;
+  }
+
+  .option:hover:not(.locked) { background: #f3ede0; }
+
+  .option input[type="radio"] { margin-top: 3px; accent-color: var(--ink); }
+
+  .option .label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    flex-shrink: 0;
+  }
+
+  .option .text { font-size: 0.94rem; line-height: 1.45; }
+
+  .option.correct {
+    background: var(--correct-bg);
+    border-color: var(--correct-border);
+  }
+
+  .option.wrong {
+    background: var(--wrong-bg);
+    border-color: var(--wrong-border);
+  }
+
+  .explanation {
+    display: none;
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: #f3ede0;
+    border-left: 3px solid var(--red-pen);
+    border-radius: 3px;
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+
+  .explanation.visible { display: block; }
+
+  .explanation .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--red-pen);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .submit-bar {
+    position: sticky;
+    bottom: 20px;
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+  }
+
+  button.submit-quiz {
+    font-family: 'Lora', serif;
+    font-weight: 600;
+    font-size: 1rem;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 14px 32px;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(32,43,51,0.25);
+  }
+
+  button.submit-quiz:hover { background: var(--red-pen); }
+
+  .score-banner {
+    display: none;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 4px;
+    padding: 22px 26px;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .score-banner.visible { display: block; }
+
+  .score-banner .score-main {
+    font-family: 'Lora', serif;
+    font-weight: 700;
+    font-size: 2rem;
+  }
+
+  .score-banner .score-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    color: #d8cfba;
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+  <div class="sheet">
+    <div class="letterhead">
+      <h1>Bài Thi Trắc Nghiệm</h1>
+      <span class="topic-tag" id="topic-tag"></span>
+    </div>
+
+    <div id="score-banner" class="score-banner">
+      <div class="score-main" id="score-main"></div>
+      <div class="score-sub" id="score-sub"></div>
+    </div>
+
+    <div id="questions-container"></div>
+
+    <div id="empty-state" style="display:none;">
+      Không tìm thấy dữ liệu đề thi. Vui lòng quay lại trang tạo đề và thử lại.
+    </div>
+
+    <div class="submit-bar" id="submit-bar">
+      <button class="submit-quiz" id="submit-btn">Nộp Bài &amp; Xem Điểm</button>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const LETTERS = ["A", "B", "C", "D"];
+      const container = document.getElementById("questions-container");
+      const emptyState = document.getElementById("empty-state");
+      const submitBar = document.getElementById("submit-bar");
+      const submitBtn = document.getElementById("submit-btn");
+      const scoreBanner = document.getElementById("score-banner");
+      const scoreMain = document.getElementById("score-main");
+      const scoreSub = document.getElementById("score-sub");
+      const topicTag = document.getElementById("topic-tag");
+
+      let quizData = null;
+      try {
+        quizData = JSON.parse(localStorage.getItem("currentQuizData"));
+      } catch (e) {
+        quizData = null;
+      }
+
+      const questions = quizData && Array.isArray(quizData.questions) ? quizData.questions : [];
+
+      if (!questions.length) {
+        emptyState.style.display = "block";
+        submitBar.style.display = "none";
+        return;
+      }
+
+      if (quizData.topic) topicTag.textContent = quizData.topic;
+
+      questions.forEach((q, qIndex) => {
+        const card = document.createElement("div");
+        card.className = "question-card";
+
+        const numEl = document.createElement("div");
+        numEl.className = "q-number";
+        numEl.textContent = `Câu ${qIndex + 1} / ${questions.length}`;
+        card.appendChild(numEl);
+
+        const textEl = document.createElement("div");
+        textEl.className = "q-text";
+        textEl.textContent = q.question;
+        card.appendChild(textEl);
+
+        (q.options || []).forEach((opt, oIndex) => {
+          const optEl = document.createElement("label");
+          optEl.className = "option";
+          optEl.dataset.qIndex = qIndex;
+          optEl.dataset.oIndex = oIndex;
+
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = `q-${qIndex}`;
+          radio.value = oIndex;
+
+          const labelEl = document.createElement("span");
+          labelEl.className = "label";
+          labelEl.textContent = LETTERS[oIndex] || oIndex + 1;
+
+          const textSpan = document.createElement("span");
+          textSpan.className = "text";
+          textSpan.textContent = opt;
+
+          optEl.appendChild(radio);
+          optEl.appendChild(labelEl);
+          optEl.appendChild(textSpan);
+          card.appendChild(optEl);
+        });
+
+        const explanation = document.createElement("div");
+        explanation.className = "explanation";
+        explanation.id = `explanation-${qIndex}`;
+        explanation.innerHTML = `<span class="tag">Giải thích</span>${(q.explanation || "").replace(/</g, "&lt;")}`;
+        card.appendChild(explanation);
+
+        container.appendChild(card);
+      });
+
+      submitBtn.addEventListener("click", () => {
+        let correctCount = 0;
+
+        questions.forEach((q, qIndex) => {
+          const selected = document.querySelector(`input[name="q-${qIndex}"]:checked`);
+          const selectedIndex = selected ? Number(selected.value) : null;
+          const correctIndex = Number(q.answer);
+
+          document.querySelectorAll(`.option[data-q-index="${qIndex}"]`).forEach((optEl) => {
+            const oIndex = Number(optEl.dataset.oIndex);
+            optEl.classList.add("locked");
+            optEl.querySelector('input[type="radio"]').disabled = true;
+
+            if (oIndex === correctIndex) {
+              optEl.classList.add("correct");
+            } else if (oIndex === selectedIndex && selectedIndex !== correctIndex) {
+              optEl.classList.add("wrong");
+            }
+          });
+
+          document.getElementById(`explanation-${qIndex}`).classList.add("visible");
+
+          if (selectedIndex === correctIndex) correctCount += 1;
+        });
+
+        const total = questions.length;
+        const percent = Math.round((correctCount / total) * 100);
+        scoreMain.textContent = `${correctCount}/${total} câu (${percent}%)`;
+        scoreSub.textContent =
+          percent >= 80 ? "Xuất sắc!" : percent >= 50 ? "Khá tốt, tiếp tục cố gắng!" : "Cần ôn lại thêm nhé!";
+        scoreBanner.classList.add("visible");
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Đã nộp bài";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    })();
+  </script>
+</body>
+</html>

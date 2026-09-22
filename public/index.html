@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tạo Đề Thi Trắc Nghiệm Tiếng Anh — AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #faf6ec;
+    --paper-line: #d8cfba;
+    --ink: #202b33;
+    --ink-soft: #5b6772;
+    --red-pen: #b23a2e;
+    --gold: #b8901f;
+    --green: #3f7d4f;
+    --card-shadow: rgba(32, 43, 51, 0.14);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--paper);
+    background-image:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 37px,
+        var(--paper-line) 38px
+      );
+    background-position: 0 140px;
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    display: flex;
+    justify-content: center;
+    padding: 48px 20px 80px;
+  }
+
+  .sheet {
+    width: 100%;
+    max-width: 640px;
+  }
+
+  .letterhead {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .letterhead h1 {
+    font-family: 'Lora', serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .letterhead .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--red-pen);
+    border: 1.5px solid var(--red-pen);
+    padding: 3px 8px;
+    border-radius: 3px;
+    transform: rotate(-3deg);
+    white-space: nowrap;
+  }
+
+  .card {
+    background: #fffdf8;
+    border: 1px solid var(--paper-line);
+    border-left: 5px solid var(--red-pen);
+    border-radius: 2px;
+    padding: 32px 30px;
+    box-shadow: 0 10px 30px var(--card-shadow);
+    position: relative;
+  }
+
+  .field { margin-bottom: 22px; }
+
+  .field label {
+    display: block;
+    font-family: 'Lora', serif;
+    font-weight: 600;
+    font-size: 0.98rem;
+    margin-bottom: 8px;
+  }
+
+  .field .hint {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+
+  textarea, input[type="text"], input[type="number"] {
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    padding: 12px 14px;
+    border: 1.5px solid var(--paper-line);
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--ink);
+    resize: vertical;
+  }
+
+  textarea { min-height: 140px; line-height: 1.6; }
+
+  textarea:focus, input:focus {
+    outline: none;
+    border-color: var(--ink);
+  }
+
+  .upload-zone {
+    border: 1.5px dashed var(--paper-line);
+    border-radius: 4px;
+    padding: 18px;
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+  }
+
+  .upload-zone:hover { border-color: var(--gold); }
+
+  .upload-zone input[type="file"] { display: none; }
+
+  .upload-icon {
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--ink);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .upload-text .primary { font-weight: 500; font-size: 0.92rem; }
+  .upload-text .secondary { font-size: 0.8rem; color: var(--ink-soft); margin-top: 2px; }
+
+  .file-info {
+    margin-top: 12px;
+    padding: 12px 14px;
+    background: #f3ede0;
+    border-radius: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 1.7;
+    display: none;
+  }
+
+  .file-info.visible { display: block; }
+
+  .file-info .remove {
+    color: var(--red-pen);
+    cursor: pointer;
+    text-decoration: underline;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .row-two {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+  }
+
+  .row-two .field { flex: 1; margin-bottom: 0; }
+
+  .suggested-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--green);
+    margin-top: 8px;
+  }
+
+  .submit-row {
+    margin-top: 30px;
+    padding-top: 22px;
+    border-top: 1px dashed var(--paper-line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  button.generate {
+    font-family: 'Lora', serif;
+    font-weight: 600;
+    font-size: 1rem;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 13px 26px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+
+  button.generate:hover { background: var(--red-pen); }
+  button.generate:disabled { background: var(--ink-soft); cursor: wait; }
+
+  .status {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .status.error { color: var(--red-pen); }
+
+  .footnote {
+    text-align: center;
+    margin-top: 22px;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+</style>
+</head>
+<body>
+  <div class="sheet">
+    <div class="letterhead">
+      <h1>Đề Thi Trắc Nghiệm Tiếng Anh</h1>
+      <span class="tag">tạo bởi AI</span>
+    </div>
+
+    <div class="card">
+      <form id="quiz-form">
+        <div class="field">
+          <label for="topic">Chủ đề hoặc văn bản</label>
+          <textarea id="topic" name="topic" placeholder="Dán đoạn văn, chủ đề ngữ pháp, hoặc nội dung bài học tiếng Anh vào đây..."></textarea>
+          <div class="hint">Ví dụ: một đoạn văn đọc hiểu, chủ đề "thì hiện tại hoàn thành", hoặc từ vựng chủ đề du lịch.</div>
+        </div>
+
+        <div class="field">
+          <label for="file-input">Tài liệu đính kèm (không bắt buộc)</label>
+          <label class="upload-zone" id="upload-zone" for="file-input">
+            <div class="upload-icon">↑</div>
+            <div class="upload-text">
+              <div class="primary">Chọn tệp hoặc kéo thả vào đây</div>
+              <div class="secondary">.txt, .pdf, .docx, hoặc hình ảnh</div>
+            </div>
+            <input type="file" id="file-input" accept=".txt,.pdf,.docx,image/*">
+          </label>
+          <div class="file-info" id="file-info">
+            <div id="file-name"></div>
+            <div id="file-meta"></div>
+            <span class="remove" id="file-remove">Gỡ tệp</span>
+          </div>
+        </div>
+
+        <div class="row-two">
+          <div class="field">
+            <label for="num-questions">Số câu hỏi (tùy chọn)</label>
+            <input type="number" id="num-questions" name="numQuestions" min="1" max="50" placeholder="Để trống để AI tự đề xuất">
+            <div class="suggested-badge" id="suggested-badge"></div>
+          </div>
+        </div>
+
+        <div class="submit-row">
+          <button type="submit" class="generate" id="generate-btn">Tạo đề thi</button>
+          <span class="status" id="status-text"></span>
+        </div>
+      </form>
+    </div>
+
+    <div class="footnote">Đề thi sẽ mở ở một tab mới để bạn làm bài và tự động chấm điểm.</div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
