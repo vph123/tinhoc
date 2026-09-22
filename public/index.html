@@ -14,6 +14,7 @@
         .question-card { background: #f9f9f9; border: 1px solid #ddd; padding: 15px; margin-top: 15px; border-radius: 5px; }
         .option { margin: 5px 0; }
         #loading { display: none; color: #666; font-style: italic; }
+        .divider { text-align: center; font-weight: bold; margin: 15px 0; color: #777; }
     </style>
 </head>
 <body>
@@ -21,8 +22,15 @@
     <h2>Tạo Bài Thi Trắc Nghiệm Tiếng Anh</h2>
     
     <div class="form-group">
-        <label for="topic">Chủ đề:</label>
-        <input type="text" id="topic" placeholder="Ví dụ: Present Simple, Vocabulary Unit 1..." value="Present Simple">
+        <label for="topic">Chủ đề câu hỏi:</label>
+        <input type="text" id="topic" placeholder="Nhập chủ đề (vd: Present Simple)" value="Present Simple">
+    </div>
+
+    <div class="divider">Hoặc</div>
+
+    <div class="form-group">
+        <label for="fileInput">Tải file tài liệu (.txt, .pdf, .docx):</label>
+        <input type="file" id="fileInput" accept=".txt,.pdf,.doc,.docx">
     </div>
 
     <div class="form-group">
