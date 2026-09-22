@@ -3,45 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tạo Bài Thi Trắc Nghiệm Tiếng Anh AI</title>
+    <title>Tạo Bài Thi Trắc Nghiệm AI</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 650px; margin: 30px auto; padding: 20px; line-height: 1.6; color: #333; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; }
-        input[type="text"], input[type="number"], input[type="file"] { width: 100%; padding: 10px; box-sizing: border-box; font-size: 15px; border: 1px solid #ccc; border-radius: 4px; }
-        button { width: 100%; padding: 12px; font-size: 16px; font-weight: bold; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        button:disabled { background-color: #cccccc; cursor: not-allowed; }
-        .divider { text-align: center; font-weight: bold; margin: 15px 0; color: #777; }
-        .file-info { background: #eef7ff; border: 1px solid #bce1ff; padding: 10px; border-radius: 4px; margin-top: 8px; font-size: 14px; display: none; }
-        #loading { display: none; color: #007bff; font-weight: bold; margin-top: 15px; text-align: center; }
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 15px;
+            color: #333;
+        }
+        h2 {
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        .divider {
+            text-align: center;
+            font-weight: bold;
+            color: #777;
+            margin: 15px 0;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
 
     <h2>Tạo Bài Thi Trắc Nghiệm AI</h2>
-    
-    <div class="form-group">
-        <label for="topic">1. Nhập chủ đề:</label>
-        <input type="text" id="topic" placeholder="Ví dụ: Present Simple, Job Interview..." value="Present Simple">
-    </div>
 
-    <div class="divider">HOẶC</div>
+    <form id="quizForm">
+        <!-- 1. Nhập chủ đề -->
+        <div class="form-group">
+            <label for="topic">1. Nhập chủ đề:</label>
+            <input type="text" id="topic" placeholder="Ví dụ: Present Simple, Lịch sử Việt Nam...">
+        </div>
 
-    <div class="form-group">
-        <label for="fileInput">2. Tải file tài liệu (.txt):</label>
-        <input type="file" id="fileInput" accept=".txt" onchange="handleFileSelect()">
-        <div id="fileInfo" class="file-info"></div>
-    </div>
+        <div class="divider">HOẶC</div>
 
-    <div class="form-group">
-        <label for="numQuestions">3. Số lượng câu hỏi (Để trống nếu muốn AI tự đề xuất):</label>
-        <input type="number" id="numQuestions" placeholder="Tự động theo độ dài bài" min="1" max="20">
-    </div>
+        <!-- 2. Tải file tài liệu (Chấp nhận mọi loại file) -->
+        <div class="form-group">
+            <label for="fileInput">2. Tải file tài liệu (Chấp nhận mọi định dạng: PDF, Word, TXT, Ảnh,...):</label>
+            <!-- accept="*/*" cho phép chọn tất cả các định dạng file -->
+            <input type="file" id="fileInput" accept="*/*">
+        </div>
 
-    <button id="btnGenerate" onclick="generateQuiz()">Tạo Bài Thi & Mở Tab Mới</button>
-    
-    <p id="loading">⏳ Đang phân tích nội dung & tạo bài thi, vui lòng đợi giây lát...</p>
+        <!-- 3. Số lượng câu hỏi -->
+        <div class="form-group">
+            <label for="questionCount">3. Số lượng câu hỏi (Để trống nếu muốn AI tự đề xuất):</label>
+            <input type="text" id="questionCount" placeholder="Tự động theo độ dài bài">
+        </div>
 
-    <script src="script.js"></script>
+        <!-- Nút Tạo bài thi -->
+        <button type="submit" id="submitBtn">Tạo Bài Thi & Mở Tab Mới</button>
+    </form>
+
+    <script>
+        // Hàm chuyển đổi file bất kỳ sang Base64 để gửi sang AI (Gemini Multimodal API)
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                    // Lấy đoạn mã Base64 bỏ phần header "data:...;base64,"
+                    const base64Data = reader.result.split(',')[1];
+                    resolve({
+                        inlineData: {
+                            data: base64Data,
+                            mimeType: file.type || "application/octet-stream"
+                        }
+                    });
+                };
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        // Xử lý sự kiện khi ấn nút Tạo bài thi
+        document.getElementById('quizForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const topic = document.getElementById('topic').value.trim();
+            const fileInput = document.getElementById('fileInput');
+            const questionCount = document.getElementById('questionCount').value.trim();
+            const file = fileInput.files[0];
+
+            if (!topic && !file) {
+                alert("Vui lòng nhập chủ đề hoặc tải lên một file tài liệu!");
+                return;
+            }
+
+            const btn = document.getElementById('submitBtn');
+            btn.innerText = "Đang xử lý...";
+            btn.disabled = true;
+
+            try {
+                let payload = {
+                    topic: topic,
+                    questionCount: questionCount || "Tự động",
+                    fileData: null
+                };
+
+                // Nếu người dùng chọn file, chuyển file sang Base64
+                if (file) {
+                    payload.fileData = await fileToBase64(file);
+                    payload.fileName = file.name;
+                }
+
+                console.log("Dữ liệu gửi đi:", payload);
+
+                // TODO: Gửi `payload` tới server backend (Render/Node.js/Python) của bạn
+                /*
+                const response = await fetch('/api/generate-quiz', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                */
+
+                alert("Đã tiếp nhận yêu cầu! Đang chuyển hướng...");
+
+            } catch (error) {
+                console.error("Lỗi xử lý file:", error);
+                alert("Có lỗi xảy ra khi đọc file!");
+            } finally {
+                btn.innerText = "Tạo Bài Thi & Mở Tab Mới";
+                btn.disabled = false;
+            }
+        });
+    </script>
 </body>
 </html>
