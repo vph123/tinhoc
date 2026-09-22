@@ -12,8 +12,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
 
-// Danh sách các model để tự động chuyển tiếp nếu gặp lỗi
-const MODELS = ["gemini-3.6-flash", "gemini-1.5-flash"];
+// Danh sách các model chuẩn hiện tại
+const MODELS = ["gemini-3.6-flash", "gemini-2.0-flash", "gemini-1.5-flash-8b"];
 
 app.post('/api/generate-quiz', async (req, res) => {
     try {
@@ -74,7 +74,7 @@ Khung trả về BẮT BUỘC dạng mảng JSON thuần (không chứa markdown
         let responseText = null;
         let lastError = null;
 
-        // Vòng lặp tự động chuyển model nếu gặp lỗi
+        // Tự động chuyển qua model gemini-2.0-flash nếu model đầu tiên gặp lỗi 503
         for (const modelName of MODELS) {
             try {
                 console.log(`Đang gọi Gemini model: ${modelName}`);
@@ -119,4 +119,3 @@ Khung trả về BẮT BUỘC dạng mảng JSON thuần (không chứa markdown
 app.listen(PORT, () => {
     console.log(`Server đang chạy tại port ${PORT}`);
 });
-            
