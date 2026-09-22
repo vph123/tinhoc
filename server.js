@@ -39,8 +39,8 @@ app.post('/api/generate-quiz', async (req, res) => {
             }
         }
 
-        // Dùng gemini-1.5-flash tối ưu cho xử lý đa phương thức (Multimodal)
-        const model = genAI.getGenerativeModel({ model: "gemini-3.6-flash" });
+        // Dùng gemini-2.5-flash tối ưu cho xử lý đa phương thức (Multimodal)
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
         let promptText = `Bạn là một chuyên gia soạn đề thi. Hãy phân tích tài liệu/chủ đề được cung cấp và tạo chính xác ${finalNumQuestions} câu hỏi trắc nghiệm tiếng Anh.`;
 
