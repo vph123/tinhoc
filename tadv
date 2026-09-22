@@ -413,4 +413,390 @@ const questions = [
         id: 21,
         sign: "DENTIST CLINIC:\nIf you need to cancel or change your appointment, please give us at least 24 hours' notice, or a cancellation fee may apply.",
         options: {
-            A: "You will have to pay money if
+            A: "You will have to pay money if you change your appointment at short notice.",
+            B: "The clinic will charge you a fee every time you book a new appointment.",
+            C: "You cannot change your appointment time once it has been confirmed."
+        },
+        answer: "A",
+        explanation: "<b>Dịch thông báo:</b> Phòng khám nha khoa: Nếu cần hủy hoặc đổi lịch, vui lòng báo trước ít nhất 24 giờ, nếu không sẽ bị tính phí hủy.<br><b>Giải thích:</b> Đổi/hủy lịch sát giờ (không báo trước 24h) sẽ phải đóng phí phạt."
+    },
+    {
+        id: 22,
+        sign: "Hey Tom,\nI'm running late because traffic is terrible near the station. Don't wait outside in the rain-I'll meet you upstairs in the cafe next to the bookstore instead.\nMatt",
+        options: {
+            A: "Matt wants Tom to wait for him outside the station building.",
+            B: "Matt is suggesting a warmer and drier place for them to meet.",
+            C: "Tom is currently sitting in a cafe waiting for Matt to arrive."
+        },
+        answer: "B",
+        explanation: "<b>Dịch tin nhắn:</b> Tớ đang bị kẹt xe. Đừng đứng đợi ngoài trời mưa, lên quán cà phê tầng trên cạnh nhà sách đợi tớ nhé.<br><b>Giải thích:</b> Matt gợi ý chỗ đợi ở quán cà phê để tránh mưa và ấm áp hơn."
+    },
+    {
+        id: 23,
+        sign: "BUS TERMINAL:\nPassengers must purchase their tickets from the ticket machine on the platform before boarding the bus. Drivers do not sell tickets on board.",
+        options: {
+            A: "You can buy your ticket directly from the bus driver when you get on.",
+            B: "You must get your ticket from the machine before you enter the bus.",
+            C: "Tickets bought from the driver are more expensive than machine tickets."
+        },
+        answer: "B",
+        explanation: "<b>Dịch thông báo:</b> Hành khách phải mua vé tại máy bán vé tự động trên sân chờ trước khi lên xe. Tài xế không bán vé.<br><b>Giải thích:</b> Bắt buộc phải mua vé tại máy trước khi bước lên xe buýt."
+    },
+    {
+        id: 24,
+        sign: "To: All Staff\nFrom: IT Support\nWe will be upgrading the company network this Sunday between 2:00 p.m. and 5:00 p.m. Email services will be temporarily unavailable during this period.",
+        options: {
+            A: "Staff members cannot use their work emails on Sunday afternoon.",
+            B: "The network upgrade will take place during normal office hours on Monday.",
+            C: "IT Support wants everyone to work from home this Sunday afternoon."
+        },
+        answer: "A",
+        explanation: "<b>Dịch thông báo:</b> Nâng cấp hệ thống mạng công ty vào Chủ Nhật từ 14:00 đến 17:00. Dịch vụ email sẽ tạm ngừng trong thời gian này.<br><b>Giải thích:</b> Chiều Chủ Nhật dịch vụ email công ty bị gián đoạn nên nhân viên không sử dụng được."
+    },
+    {
+        id: 25,
+        sign: "PARK DIRECTIONS:\nBoating lake this way →\nPlease do not feed the ducks or throw rubbish into the water. Use the bins provided nearby.",
+        options: {
+            A: "Visitors are encouraged to give food to the birds in the lake.",
+            B: "You should put your rubbish into the bins near the lake.",
+            C: "Swimming is allowed in the boating lake during the summer months."
+        },
+        answer: "B",
+        explanation: "<b>Dịch chỉ dẫn:</b> Hồ chèo thuyền đi hướng này -> Vui lòng không cho vịt ăn hoặc vứt rác xuống nước. Hãy dùng thùng rác gần đó.<br><b>Giải thích:</b> Yêu cầu du khách vứt rác vào các thùng rác đặt quanh hồ."
+    },
+    {
+        id: 26,
+        sign: "Hi Sophie,\nAre you still free to go jogging this afternoon? It's looking quite cloudy, so remember to wear a rain jacket just in case it pours!\n- Emma",
+        options: {
+            A: "Emma thinks it is definitely going to be a very sunny afternoon.",
+            B: "Emma wants Sophie to dress appropriately because the weather might change.",
+            C: "Emma is cancelling the jogging session because she thinks it will rain."
+        },
+        answer: "B",
+        explanation: "<b>Dịch tin nhắn:</b> Chiều nay cậu còn rảnh đi chạy bộ không? Trời nhiều mây lắm, nhớ mặc áo mưa phòng khi trời đổ mưa to nhé!<br><b>Giải thích:</b> Trắc nghiệm yêu cầu mặc áo mưa phù hợp phòng khi thời tiết thay đổi bất ngờ."
+    },
+    {
+        id: 27,
+        sign: "TRAIN STATION:\nThe elevator to Platform 4 is currently out of order. Passengers with heavy luggage or strollers should contact station staff for assistance.",
+        options: {
+            A: "The elevator is working perfectly for passengers with large bags.",
+            B: "Passengers who need help getting to Platform 4 should speak to a worker.",
+            C: "Platform 4 is closed to all trains until the elevator is fixed."
+        },
+        answer: "B",
+        explanation: "<b>Dịch thông báo:</b> Thang máy ra Ga số 4 đang hỏng. Hành khách mang hành lý nặng hoặc xe đẩy vui lòng liên hệ nhân viên để được hỗ trợ.<br><b>Giải thích:</b> Khách cần hỗ trợ ra Ga số 4 hãy gặp/trao đổi trực tiếp với nhân viên."
+    },
+    {
+        id: 28,
+        sign: "FITNESS CENTER:\nPlease wipe down all exercise equipment with the cleaning spray and paper towels provided after you finish your workout.",
+        options: {
+            A: "Fitness center staff will clean the machines after every person uses them.",
+            B: "You must clean the equipment yourself after you have finished using it.",
+            C: "You should spray the machines with water before you start exercising."
+        },
+        answer: "B",
+        explanation: "<b>Dịch thông báo:</b> Vui lòng lau sạch thiết bị tập bằng chai xịt và khăn giấy có sẵn sau khi tập xong.<br><b>Giải thích:</b> Người tập phải tự lau dọn dụng cụ sau khi tập xong."
+    },
+    {
+        id: 29,
+        sign: "To: George\nFrom: Travel Agent\nYour flight details have been updated. The departure time has changed from 14:30 to 16:00. Please check in at least two hours before the new departure time.",
+        options: {
+            A: "George's flight will leave earlier in the day than he expected.",
+            B: "George needs to arrive at the airport by 14:00 at the latest.",
+            C: "The flight departure has been delayed by one hour and thirty minutes."
+        },
+        answer: "C",
+        explanation: "<b>Dịch thông báo:</b> Giờ khởi hành chuyến bay đổi từ 14:30 sang 16:00. Vui lòng check-in ít nhất 2 tiếng trước giờ bay mới.<br><b>Giải thích:</b> Đổi từ 14:30 sang 16:00 tức là chuyến bay bị hoãn (delayed) 1 tiếng 30 phút."
+    },
+    {
+        id: 30,
+        sign: "CONSTRUCTION SITE:\nDANGER!\nHard hats and safety boots must be worn beyond this point. No unauthorized entry allowed.",
+        options: {
+            A: "Anyone can enter the construction site if they walk very carefully.",
+            B: "You must wear specific protective clothing to go past this sign.",
+            C: "You can buy safety boots and hard hats inside the construction office."
+        },
+        answer: "B",
+        explanation: "<b>Dịch biển báo:</b> BẢNG CẢNH BÁO: Phải đội mũ bảo hộ và đi giày bảo hộ khi vào khu vực này. Không có nhiệm vụ miễn vào.<br><b>Giải thích:</b> Phải trang bị đầy đủ đồ bảo hộ (mũ, giày) mới được đi qua biển báo."
+    }
+];
+
+// Render Quiz Questions
+function renderQuiz() {
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = '';
+
+    questions.forEach((q, index) => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = `q-card-${q.id}`;
+
+        let optionsHTML = '';
+        for (const [key, value] of Object.entries(q.options)) {
+            optionsHTML += `
+                <label class="option" id="label-${q.id}-${key}">
+                    <input type="radio" name="q${q.id}" value="${key}">
+                    <strong>${key}.</strong>&nbsp;${value}
+                </label>
+            `;
+        }
+
+        card.innerHTML = `
+            <div class="question-number">Câu ${index + 1} (Question ${q.id})</div>
+            <div class="sign-box">${q.sign}</div>
+            <div class="options">
+                ${optionsHTML}
+            </div>
+            <div class="explanation" id="explain-${q.id}">
+                ${q.explanation}
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+// Grade Quiz and Calculate Score
+function gradeQuiz() {
+    let score = 0;
+
+    questions.forEach(q => {
+        const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+        const explanation = document.getElementById(`explain-${q.id}`);
+
+        // Reset styling
+        Object.keys(q.options).forEach(key => {
+            const label = document.getElementById(`label-${q.id}-${key}`);
+            label.classList.remove('correct', 'incorrect');
+        });
+
+        if (selected) {
+            const userAns = selected.value;
+            if (userAns === q.answer) {
+                score++;
+                document.getElementById(`label-${q.id}-${userAns}`).classList.add('correct');
+            } else {
+                document.getElementById(`label-${q.id}-${userAns}`).classList.add('incorrect');
+                document.getElementById(`label-${q.id}-${q.answer}`).classList.add('correct');
+            }
+        } else {
+            // Highlight correct answer if skipped
+            document.getElementById(`label-${q.id}-${q.answer}`).classList.add('correct');
+        }
+
+        // Show explanation
+        explanation.style.display = 'block';
+    });
+
+    // Display total score
+    const scoreBoard = document.getElementById('score-board');
+    const scoreText = document.getElementById('score-text');
+    scoreText.innerText = `KẾT QUẢ: ${score} / ${questions.length} CÂU ĐÚNG (${((score / questions.length) * 10).toFixed(1)} ĐIỂM)`;
+    scoreBoard.style.display = 'block';
+
+    // Scroll to top score board
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Initialize
+renderQuiz();
+</script>
+
+</body>
+</html>
+: "Sự hỗ trợ, trợ giúp", context: "contact station staff for assistance" }
+        ]
+    },
+    {
+        id: 28,
+        sign: "FITNESS CENTER:\nPlease wipe down all exercise equipment with the cleaning spray and paper towels provided after you finish your workout.",
+        options: {
+            A: "Fitness center staff will clean the machines after every person uses them.",
+            B: "You must clean the equipment yourself after you have finished using it.",
+            C: "You should spray the machines with water before you start exercising."
+        },
+        answer: "B",
+        explanation: "<b>Dịch thông báo:</b> Vui lòng lau sạch thiết bị tập bằng chai xịt và khăn giấy có sẵn sau khi tập xong.<br><b>Giải thích:</b> Người tập phải tự lau dọn dụng cụ sau khi tập xong.",
+        vocab: [
+            { word: "Wipe down", pos: "phr v", ipa: "/waɪp daʊn/", meaning: "Lau sạch bề mặt", context: "wipe down all exercise equipment" }
+        ]
+    },
+    {
+        id: 29,
+        sign: "To: George\nFrom: Travel Agent\nYour flight details have been updated. The departure time has changed from 14:30 to 16:00. Please check in at least two hours before the new departure time.",
+        options: {
+            A: "George's flight will leave earlier in the day than he expected.",
+            B: "George needs to arrive at the airport by 14:00 at the latest.",
+            C: "The flight departure has been delayed by one hour and thirty minutes."
+        },
+        answer: "C",
+        explanation: "<b>Dịch thông báo:</b> Giờ khởi hành chuyến bay đổi từ 14:30 sang 16:00. Vui lòng check-in ít nhất 2 tiếng trước giờ bay mới.<br><b>Giải thích:</b> Đổi từ 14:30 sang 16:00 tức là chuyến bay bị hoãn (delayed) 1 tiếng 30 phút.",
+        vocab: [
+            { word: "Departure", pos: "n", ipa: "/dɪˈpɑː.tʃər/", meaning: "Sự khởi hành, giờ cất cánh", context: "departure time has changed" }
+        ]
+    },
+    {
+        id: 30,
+        sign: "CONSTRUCTION SITE:\nDANGER!\nHard hats and safety boots must be worn beyond this point. No unauthorized entry allowed.",
+        options: {
+            A: "Anyone can enter the construction site if they walk very carefully.",
+            B: "You must wear specific protective clothing to go past this sign.",
+            C: "You can buy safety boots and hard hats inside the construction office."
+        },
+        answer: "B",
+        explanation: "<b>Dịch biển báo:</b> BẢNG CẢNH BÁO: Phải đội mũ bảo hộ và đi giày bảo hộ khi vào khu vực này. Không có nhiệm vụ miễn vào.<br><b>Giải thích:</b> Phải trang bị đầy đủ đồ bảo hộ (mũ, giày) mới được đi qua biển báo.",
+        vocab: [
+            { word: "Unauthorized", pos: "adj", ipa: "/ʌnˈɔː.θər.aɪzd/", meaning: "Không có thẩm quyền / Không được phép", context: "No unauthorized entry allowed" }
+        ]
+    }
+];
+
+// Render Quiz
+function renderQuiz() {
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = '';
+
+    questions.forEach((q, index) => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = `q-card-${q.id}`;
+
+        let optionsHTML = '';
+        for (const [key, value] of Object.entries(q.options)) {
+            optionsHTML += `
+                <label class="option" id="label-${q.id}-${key}">
+                    <input type="radio" name="q${q.id}" value="${key}">
+                    <strong>${key}.</strong>&nbsp;${value}
+                </label>
+            `;
+        }
+
+        card.innerHTML = `
+            <div class="question-number">Câu ${index + 1} (Question ${q.id})</div>
+            <div class="sign-box">${q.sign}</div>
+            <div class="options">${optionsHTML}</div>
+            <div class="explanation" id="explain-${q.id}">${q.explanation}</div>
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+// Grade Quiz
+function gradeQuiz() {
+    let score = 0;
+
+    questions.forEach(q => {
+        const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+        const explanation = document.getElementById(`explain-${q.id}`);
+
+        Object.keys(q.options).forEach(key => {
+            const label = document.getElementById(`label-${q.id}-${key}`);
+            label.classList.remove('correct', 'incorrect');
+        });
+
+        if (selected) {
+            const userAns = selected.value;
+            if (userAns === q.answer) {
+                score++;
+                document.getElementById(`label-${q.id}-${userAns}`).classList.add('correct');
+            } else {
+                document.getElementById(`label-${q.id}-${userAns}`).classList.add('incorrect');
+                document.getElementById(`label-${q.id}-${q.answer}`).classList.add('correct');
+            }
+        } else {
+            document.getElementById(`label-${q.id}-${q.answer}`).classList.add('correct');
+        }
+
+        explanation.style.display = 'block';
+    });
+
+    const scoreBoard = document.getElementById('score-board');
+    const scoreText = document.getElementById('score-text');
+    scoreText.innerText = `KẾT QUẢ: ${score} / ${questions.length} CÂU ĐÚNG (${((score / questions.length) * 10).toFixed(1)} ĐIỂM)`;
+    scoreBoard.style.display = 'block';
+
+    // HIỆN NÚT LƯU TRỮ TỪ VỰNG GÓC TRÊN BÊN PHẢI
+    document.getElementById('btn-vocab-toggle').style.display = 'block';
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Quản lý Sổ từ vựng
+function openVocabModal() {
+    const modal = document.getElementById('vocab-modal');
+    const container = document.getElementById('vocab-list-container');
+    container.innerHTML = '';
+
+    let vocabCount = 0;
+
+    questions.forEach(q => {
+        if (q.vocab && q.vocab.length > 0) {
+            q.vocab.forEach((v, idx) => {
+                vocabCount++;
+                const item = document.createElement('div');
+                item.className = 'vocab-item';
+                item.innerHTML = `
+                    <div class="vocab-item-header">
+                        <input type="checkbox" class="vocab-checkbox" id="v-${q.id}-${idx}" data-word="${v.word}" data-ipa="${v.ipa}" data-pos="${v.pos}" data-meaning="${v.meaning}" data-context="${v.context}" checked>
+                        <label for="v-${q.id}-${idx}">${v.word} <span style="font-size:13px; font-weight:normal; color:#666;">(${v.pos}) ${v.ipa}</span></label>
+                    </div>
+                    <div class="vocab-meta"><b>Nghĩa ngữ cảnh:</b> ${v.meaning}</div>
+                    <div class="vocab-context">"<b>Ngữ cảnh trong bài:</b> ${v.context}"</div>
+                `;
+                container.appendChild(item);
+            });
+        }
+    });
+
+    modal.style.display = 'flex';
+}
+
+function closeVocabModal() {
+    document.getElementById('vocab-modal').style.display = 'none';
+}
+
+function toggleSelectAll() {
+    const checkboxes = document.querySelectorAll('.vocab-checkbox');
+    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+    checkboxes.forEach(cb => cb.checked = !allChecked);
+}
+
+// Xuất file từ vựng mới
+function exportVocabFile() {
+    const checkboxes = document.querySelectorAll('.vocab-checkbox:checked');
+    if (checkboxes.length === 0) {
+        alert('Vui lòng chọn ít nhất 1 từ vựng để lưu trữ!');
+        return;
+    }
+
+    let fileContent = "==================================================\n";
+    fileContent += "   BỘ TỪ VỰNG TIẾNG ANH ĐẦU VÀO IUH - BUỔI 1\n";
+    fileContent += "   Phân tích ngữ cảnh tự động bằng AI Gemini\n";
+    fileContent += "==================================================\n\n";
+
+    checkboxes.forEach((cb, index) => {
+        const word = cb.getAttribute('data-word');
+        const ipa = cb.getAttribute('data-ipa');
+        const pos = cb.getAttribute('data-pos');
+        const meaning = cb.getAttribute('data-meaning');
+        const context = cb.getAttribute('data-context');
+
+        fileContent += `${index + 1}. ${word.toUpperCase()} (${pos})\n`;
+        fileContent += `   - Phiên âm: ${ipa}\n`;
+        fileContent += `   - Nghĩa trong bài: ${meaning}\n`;
+        fileContent += `   - Ngữ cảnh: "${context}"\n\n`;
+    });
+
+    // Tạo file đao-loat về máy
+    const blob = new Blob([fileContent], { type: 'text/plain;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'Tu_Vung_IUH_Buoi_1.txt';
+    link.click();
+}
+
+renderQuiz();
+</script>
+</body>
+</html>
