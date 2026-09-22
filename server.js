@@ -5,13 +5,15 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Nâng giới hạn kích thước nhận dữ liệu Base64 từ Front-end
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
+
+// Danh sách các model để tự động chuyển tiếp nếu gặp lỗi
+const MODELS = ["gemini-3.6-flash", "gemini-1.5-flash"];
 
 app.post('/api/generate-quiz', async (req, res) => {
     try {
@@ -24,7 +26,6 @@ app.post('/api/generate-quiz', async (req, res) => {
             });
         }
 
-        // Tính toán số lượng câu hỏi phù hợp
         let finalNumQuestions = parseInt(numQuestions);
         if (!finalNumQuestions || isNaN(finalNumQuestions)) {
             if (fileData) {
@@ -38,9 +39,6 @@ app.post('/api/generate-quiz', async (req, res) => {
                 else finalNumQuestions = 10;
             }
         }
-
-        // Dùng gemini-2.5-flash tối ưu cho xử lý đa phương thức (Multimodal)
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
         let promptText = `Bạn là một chuyên gia soạn đề thi. Hãy phân tích tài liệu/chủ đề được cung cấp và tạo chính xác ${finalNumQuestions} câu hỏi trắc nghiệm tiếng Anh.`;
 
@@ -63,8 +61,6 @@ Khung trả về BẮT BUỘC dạng mảng JSON thuần (không chứa markdown
 ]`;
 
         let contents = [];
-
-        // Nếu có file upload (PDF, DOCX, Ảnh, TXT,...)
         if (fileData && fileData.inlineData) {
             contents.push({
                 inlineData: {
@@ -73,13 +69,32 @@ Khung trả về BẮT BUỘC dạng mảng JSON thuần (không chứa markdown
                 }
             });
         }
-
         contents.push(promptText);
 
-        const result = await model.generateContent(contents);
-        let responseText = result.response.text().trim();
+        let responseText = null;
+        let lastError = null;
 
-        // Làm sạch định dạng JSON
+        // Vòng lặp tự động chuyển model nếu gặp lỗi
+        for (const modelName of MODELS) {
+            try {
+                console.log(`Đang gọi Gemini model: ${modelName}`);
+                const model = genAI.getGenerativeModel({ model: modelName });
+                const result = await model.generateContent(contents);
+                responseText = result.response.text().trim();
+                if (responseText) break;
+            } catch (err) {
+                console.warn(`Lỗi với model ${modelName}:`, err.message);
+                lastError = err;
+            }
+        }
+
+        if (!responseText) {
+            return res.status(500).json({
+                success: false,
+                error: lastError ? lastError.message : "Không thể kết nối tới các model Gemini."
+            });
+        }
+
         if (responseText.startsWith('```json')) {
             responseText = responseText.replace(/^```json\s*/, '').replace(/\s*```$/, '');
         } else if (responseText.startsWith('```')) {
@@ -104,3 +119,4 @@ Khung trả về BẮT BUỘC dạng mảng JSON thuần (không chứa markdown
 app.listen(PORT, () => {
     console.log(`Server đang chạy tại port ${PORT}`);
 });
+            
