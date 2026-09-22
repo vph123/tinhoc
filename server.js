@@ -5,50 +5,48 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Cấu hình Express
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Khởi tạo Gemini API
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
 
-// Route xử lý tạo câu hỏi trắc nghiệm
 app.post('/api/generate-quiz', async (req, res) => {
     try {
         const { topic, numQuestions } = req.body;
-        const model = genAI.getGenerativeModel({ model: "gemini-3.6-flash" });
+
+        // Cấu hình model chuẩn
+        const model = genAI.getGenerativeModel({ 
+            model: "gemini-1.5-flash",
+            generationConfig: { responseMimeType: "application/json" }
+        });
 
         const prompt = `Tạo ${numQuestions || 5} câu hỏi trắc nghiệm tiếng Anh về chủ đề: "${topic || 'General English'}".
-Khung trả về BẮT BUỘC là dạng mảng JSON thuần túy (không chứa markdown \`\`\`json):
+Trả về dạng JSON array như sau:
 [
   {
     "question": "Nội dung câu hỏi",
     "options": ["Đáp án A", "Đáp án B", "Đáp án C", "Đáp án D"],
     "answer": 0,
-    "explanation": "Giải thích chi tiết bằng tiếng Việt"
+    "explanation": "Giải thích chi tiết"
   }
 ]`;
 
         const result = await model.generateContent(prompt);
-        let responseText = result.response.text().trim();
-        
-        // Làm sạch dữ liệu JSON trả về
-        if (responseText.startsWith('```json')) {
-            responseText = responseText.replace(/^```json\s*/, '').replace(/\s*```$/, '');
-        } else if (responseText.startsWith('```')) {
-            responseText = responseText.replace(/^```\s*/, '').replace(/\s*```$/, '');
-        }
-
+        const responseText = result.response.text();
         const quizData = JSON.parse(responseText);
-        res.json({ success: true, data: quizData });
+
+        return res.json({ success: true, data: quizData });
+
     } catch (error) {
-        console.error("Lỗi khi tạo quiz:", error);
-        res.status(500).json({ success: false, error: error.message });
+        console.error("Lỗi server:", error);
+        return res.status(500).json({ 
+            success: false, 
+            error: error.message || "Lỗi không xác định từ Gemini AI" 
+        });
     }
 });
 
-// Chạy server
 app.listen(PORT, () => {
     console.log(`Server đang chạy tại port ${PORT}`);
 });
