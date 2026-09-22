@@ -14,7 +14,7 @@ app.use(express.static(path.join(__dirname, "public")));
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 // Model priority list — fall back down the list on 503 (overloaded) or 404 (not found)
-const MODELS = ["gemini-3.5-flash", "gemini-2.0-flash-lite"];
+const MODELS = ["gemini-3.5-flash"]
 
 // ---- Smart Assessment: suggest a question count from word count ----
 function suggestQuestionCount(wordCount, hasFile) {
