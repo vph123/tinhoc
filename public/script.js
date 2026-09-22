@@ -1,43 +1,65 @@
+let uploadedContent = "";
+
+async function handleFileSelect() {
+    const fileInput = document.getElementById('fileInput');
+    const fileInfo = document.getElementById('fileInfo');
+    const numQuestionsInput = document.getElementById('numQuestions');
+
+    if (fileInput.files.length === 0) {
+        uploadedContent = "";
+        fileInfo.style.display = 'none';
+        return;
+    }
+
+    const file = fileInput.files[0];
+    try {
+        uploadedContent = await file.text();
+        const wordCount = uploadedContent.trim().split(/\s+/).length;
+        
+        let suggestedCount = 3;
+        if (wordCount >= 800) suggestedCount = 10;
+        else if (wordCount >= 300) suggestedCount = 8;
+        else if (wordCount >= 100) suggestedCount = 5;
+
+        numQuestionsInput.value = suggestedCount;
+        fileInfo.style.display = 'block';
+        fileInfo.innerHTML = `📄 <strong>Đã nhận diện:</strong> ${file.name} (${wordCount} từ).<br>💡 <strong>Đề xuất:</strong> Tạo <strong>${suggestedCount} câu hỏi</strong> phù hợp với bài.`;
+    } catch (e) {
+        alert("Lỗi khi đọc file. Vui lòng chọn file văn bản (.txt) hợp lệ.");
+    }
+}
+
 async function generateQuiz() {
     const topic = document.getElementById('topic').value.trim();
-    const fileInput = document.getElementById('fileInput');
     const numQuestions = document.getElementById('numQuestions').value;
     const btn = document.getElementById('btnGenerate');
     const loading = document.getElementById('loading');
-    const container = document.getElementById('quizContainer');
+
+    if (!topic && !uploadedContent) {
+        alert("Vui lòng nhập chủ đề hoặc tải file tài liệu lên!");
+        return;
+    }
 
     btn.disabled = true;
     loading.style.display = 'block';
-    container.innerHTML = '';
-
-    let contentToSend = topic;
-
-    // Nếu người dùng chọn file TXT, đọc nội dung file
-    if (fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        try {
-            contentToSend = await file.text();
-        } catch (e) {
-            console.log("Không thể đọc file text trực tiếp:", e);
-        }
-    }
 
     try {
         const response = await fetch('/api/generate-quiz', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
-                topic: contentToSend || 'General English', 
-                numQuestions: parseInt(numQuestions) 
+                topic: topic,
+                content: uploadedContent,
+                numQuestions: numQuestions ? parseInt(numQuestions) : null
             })
         });
 
         const result = await response.json();
 
         if (result.success && Array.isArray(result.data)) {
-            displayQuiz(result.data);
+            // Lưu dữ liệu bài thi vào localStorage và mở tab mới
+            localStorage.setItem('currentQuizData', JSON.stringify(result.data));
+            window.open('/quiz.html', '_blank');
         } else {
             alert("Lỗi từ AI/Server: " + (result.error || "Không thể tạo bài thi"));
         }
@@ -48,27 +70,4 @@ async function generateQuiz() {
         btn.disabled = false;
         loading.style.display = 'none';
     }
-}
-
-function displayQuiz(questions) {
-    const container = document.getElementById('quizContainer');
-    let html = '<h3>Bài Thi Của Bạn:</h3>';
-
-    questions.forEach((q, index) => {
-        html += `
-            <div class="question-card">
-                <p><strong>Câu ${index + 1}: ${q.question}</strong></p>
-                ${q.options.map((opt, i) => `
-                    <div class="option">
-                        <label>
-                            <input type="radio" name="q${index}" value="${i}">
-                            ${opt}
-                        </label>
-                    </div>
-                `).join('')}
-            </div>
-        `;
-    });
-
-    container.innerHTML = html;
 }
